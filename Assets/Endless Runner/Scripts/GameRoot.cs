@@ -52,7 +52,6 @@ public class GameRoot : MonoBehaviour
 
     private void ShowLoseScreen()
     {
-
         StartCoroutine(Lose());
     }
 
