@@ -5,14 +5,14 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private Transform _spawnParent;
-    [SerializeField] private Transform[] _spawnPoints;
-    [SerializeField] private Enemy[] _enemyTemplates;
+    [SerializeField] private List<Transform> _spawnPoints;
+    [SerializeField] private List<Enemy> _enemyTemplates;
     [SerializeField] private float _spawnDelay;
     [SerializeField] private float _enemyPoolCount;
 
     private Coroutine _spawning;
+    private EnemyPool _enemyPool;
 
-    private List<Enemy> _enemies = new List<Enemy>();
     private bool _isSpawning = false;
     private bool _isInitialized = false;
 
@@ -36,34 +36,9 @@ public class EnemySpawner : MonoBehaviour
 
     public void Init()
     {
-        for (int i = 0; i < _enemyPoolCount; i++)
-        {
-            Enemy enemy = Instantiate(_enemyTemplates[Random.Range(0, _enemyTemplates.Length)], _spawnParent);
-            enemy.Init();
-            enemy.gameObject.SetActive(false);
-
-            _enemies.Add(enemy);
-        }
-
         _isSpawning = true;
+        _enemyPool = new EnemyPool(_enemyPoolCount, _enemyTemplates, _spawnParent);
         _spawning = StartCoroutine(SpawnEnemy());
-    }
-
-    private Enemy GetEnemy()
-    {
-        for (int i = 0; i < _enemies.Count; i++)
-        {
-            if (_enemies[i].gameObject.activeSelf == false)
-            {
-                return _enemies[i];
-            }
-        }
-
-        Enemy enemy = Instantiate(_enemyTemplates[Random.Range(0, _enemyTemplates.Length)], transform);
-        enemy.Init();
-        _enemies.Add(enemy);
-
-        return enemy;
     }
 
     private IEnumerator SpawnEnemy()
@@ -72,9 +47,9 @@ public class EnemySpawner : MonoBehaviour
 
         while (_isSpawning == true)
         {
-            Enemy enemy = GetEnemy();
+            Enemy enemy = _enemyPool.GetEnemy();
             enemy.Init();
-            enemy.transform.position = _spawnPoints[Random.Range(0, _spawnPoints.Length)].position;
+            enemy.transform.position = _spawnPoints[Random.Range(0, _spawnPoints.Count)].position;
             enemy.gameObject.SetActive(true);
 
             yield return spawnDelay;

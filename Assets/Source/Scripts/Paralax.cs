@@ -36,7 +36,11 @@ public class Paralax : MonoBehaviour
         while (_isInitialized == true)
         {
 
-            image.uvRect = new Rect(image.uvRect.x, image.uvRect.y + (Time.deltaTime * speed), image.uvRect.width, image.uvRect.height);
+            image.uvRect = new Rect(
+                image.uvRect.x,
+                image.uvRect.y + (Time.deltaTime * speed),
+                image.uvRect.width, image.uvRect.height
+            );
 
             yield return null;
         }

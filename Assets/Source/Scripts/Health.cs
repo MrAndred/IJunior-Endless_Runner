@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 public class Health
 {
@@ -9,9 +8,13 @@ public class Health
     private float _health;
     private bool _isAlive = true;
 
+    private float _maxHealth;
+    private float _minHealth = 0;
+
     public Health(float health)
     {
         _health = health;
+        _maxHealth = health;
     }
 
     public float Value => _health;
@@ -20,12 +23,25 @@ public class Health
 
     public void Heal(float health)
     {
+        if (_health > _maxHealth)
+        {
+            return;
+        }
+
         if (_isAlive == false || health < 0)
         {
             return;
         }
 
-        _health += health;
+        if (_health + health > _maxHealth)
+        {
+            _health = _maxHealth;
+        }
+        else
+        {
+            _health += health;
+        }
+
         OnHealthChanged?.Invoke();
     }
 

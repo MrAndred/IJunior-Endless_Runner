@@ -23,6 +23,14 @@ public class Enemy : MonoBehaviour
         Die();
     }
 
+    private void Update()
+    {
+        if (_isInitialized)
+        {
+            _mover.Move();
+        }
+    }
+
     public void Init()
     {
         _attacker = new EnemyAttacker(_damage);
@@ -34,13 +42,5 @@ public class Enemy : MonoBehaviour
     {
         gameObject.SetActive(false);
         _isInitialized = false;
-    }
-
-    private void Update()
-    {
-        if (_isInitialized)
-        {
-            _mover.Move();
-        }
     }
 }
